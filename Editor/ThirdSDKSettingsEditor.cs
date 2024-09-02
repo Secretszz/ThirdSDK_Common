@@ -8,19 +8,21 @@
 // Create Time:		2024/09/02 11:23:30
 // *******************************************
 
-namespace Bridge.Common
+namespace Bridge.Editor
 {
 	using UnityEngine;
 	using UnityEditor;
+	using Common;
 
 	/// <summary>
 	/// 
 	/// </summary>
 	[InitializeOnLoad]
 	[CustomEditor(typeof(ThirdSDKSettings))]
-	public class ThirdSDKSettingsEditor : Editor
+	internal class ThirdSDKSettingsEditor : Editor
 	{
-		private SerializedProperty _universalLink;
+		private SerializedProperty _universalLinkDomain;
+		private SerializedProperty _universalLinkPath;
 		private SerializedProperty _wxAppId;
 		private SerializedProperty _xhsAppId;
 
@@ -32,7 +34,8 @@ namespace Bridge.Common
 
         public void OnEnable()
         {
-	        _universalLink = serializedObject.FindProperty("universalLink");
+	        _universalLinkDomain = serializedObject.FindProperty("universalLinkDomain");
+	        _universalLinkPath = serializedObject.FindProperty("universalLinkPath");
 	        _wxAppId = serializedObject.FindProperty("wxAppId");
 	        _xhsAppId = serializedObject.FindProperty("xhsAppId");
         }
@@ -53,7 +56,11 @@ namespace Bridge.Common
 	        EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel);
 	        EditorGUI.indentLevel++;
 
-	        EditorGUILayout.PropertyField(_universalLink, new GUIContent(""));
+	        EditorGUILayout.PropertyField(_universalLinkDomain, new GUIContent("domain"));
+
+	        EditorGUILayout.PropertyField(_universalLinkPath, new GUIContent("path"));
+	        
+	        EditorGUILayout.HelpBox($"Universal Link: {settings.UniversalLink}", MessageType.Info);
 
 	        EditorGUI.indentLevel--;
 	        EditorGUILayout.Separator();

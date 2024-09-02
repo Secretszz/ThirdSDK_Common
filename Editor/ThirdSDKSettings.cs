@@ -8,7 +8,7 @@
 // Create Time:		2024/09/02 11:16:59
 // *******************************************
 
-namespace Bridge.Common
+namespace Bridge.Editor
 {
 	using System.IO;
 	using UnityEditor;
@@ -17,7 +17,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	internal class ThirdSDKSettings : ScriptableObject
+	public class ThirdSDKSettings : ScriptableObject
 	{
 		private const string MobileAdsSettingsResDir = "Assets/GoogleMobileAds/Resources";
 
@@ -25,7 +25,7 @@ namespace Bridge.Common
 
 		private const string MobileAdsSettingsFileExtension = ".asset";
 		
-		internal static ThirdSDKSettings LoadInstance()
+		public static ThirdSDKSettings LoadInstance()
 		{
 			//Read from resources.
 			var instance = Resources.Load<ThirdSDKSettings>(MobileAdsSettingsFile);
@@ -45,31 +45,18 @@ namespace Bridge.Common
 			return instance;
 		}
 		
-		[SerializeField] private string universalLink = string.Empty;
+		[SerializeField] private string universalLinkDomain = "domian";
 		
+		[SerializeField] private string universalLinkPath = "project";
+
 		[SerializeField] private string wxAppId = string.Empty;
 
 		[SerializeField] private string xhsAppId = string.Empty;
 
-		public string UniversalLink
-		{
-			get { return universalLink; }
+		public string UniversalLink => $"https://{universalLinkDomain}/{universalLinkPath}/";
 
-			set { universalLink = value; }
-		}
+		public string WxAppId => wxAppId;
 
-		public string WxAppId
-		{
-			get { return wxAppId; }
-
-			set { wxAppId = value; }
-		}
-		
-		public string XhsAppId
-		{
-			get { return xhsAppId; }
-
-			set { xhsAppId = value; }
-		}
+		public string XhsAppId => xhsAppId;
 	}
 }
