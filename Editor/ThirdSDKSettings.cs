@@ -53,10 +53,18 @@ namespace Bridge.Editor
 
 		[SerializeField] private string xhsAppId = string.Empty;
 
+		[SerializeField] private string fbAppId = string.Empty;
+
+		[SerializeField] private string fbClientToken = string.Empty;
+
 		public string UniversalLink => $"https://{universalLinkDomain}/{universalLinkPath}/";
 
 		public string WxAppId => wxAppId;
 
 		public string XhsAppId => xhsAppId;
+		
+		public string FbAppId => fbAppId;
+
+		public string FbClientToken => fbClientToken;
 	}
 }
