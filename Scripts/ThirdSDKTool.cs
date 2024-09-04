@@ -7,6 +7,7 @@ namespace Bridge.Common
 	{
 		public const string WxApiAsssemblyName = "Bridge.WxApi";
 		public const string XhsApiAsssemblyName = "Bridge.XhsApi";
+		public const string FBApiAsssemblyName = "Bridge.FacebookApi";
 		
 		public static bool IsOpenWxApi()
 		{
@@ -16,6 +17,11 @@ namespace Bridge.Common
 		public static bool IsOpenXhsApi()
 		{
 			return IsOpenApi(XhsApiAsssemblyName);
+		}
+		
+		public static bool IsOpenFBApi()
+		{
+			return IsOpenApi(FBApiAsssemblyName);
 		}
 
 		public static bool IsOpenApi(string startWith)
