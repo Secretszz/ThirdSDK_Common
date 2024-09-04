@@ -48,38 +48,26 @@ namespace Bridge.Editor
 			}
 		}
 
-		private bool needAddAssociatedDomains;
+		public bool NeedAddAssociatedDomains;
 
-		public bool NeedAddAssociatedDomains
-		{
-			get
-			{
-				if (ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat) || ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu) || ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook))
-				{
-					return true;
-				}
+		public string UniversalLinkDomain = "domian";
 
-				return needAddAssociatedDomains;
-			}
-			private set => needAddAssociatedDomains = value;
-		}
+		public string UniversalLinkPath = "project";
 
-		public string UniversalLinkDomain { get; private set; } = "domian";
+		public string WxAppId;
 
-		public string UniversalLinkPath { get; private set; } = "project";
+		public string XhsAppId;
+
+		public string FbAppId;
+
+		public string FbClientToken;
 
 		public string UniversalLink => $"https://{UniversalLinkDomain}/{UniversalLinkPath}/";
 
-		public string WxAppId { get; private set; }
-
-		public string XhsAppId { get; private set; }
-
-		public string FbAppId { get; private set; }
-
-		public string FbClientToken { get; private set; }
-
 		private void Save()
 		{
+			string value = JsonUtility.ToJson(this, true);
+			Debug.Log("value===" + value);
 			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(this, true));
 		}
 
@@ -112,7 +100,16 @@ namespace Bridge.Editor
 			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 			EditorGUI.indentLevel++;
 
-			Instance.NeedAddAssociatedDomains = EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			bool forceOpen = ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat) || ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu) || ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook);
+			if (forceOpen)
+			{
+				Instance.NeedAddAssociatedDomains = true;
+				EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			}
+			else
+			{
+				Instance.NeedAddAssociatedDomains = EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			}
 
 			if (Instance.NeedAddAssociatedDomains)
 			{
@@ -130,17 +127,21 @@ namespace Bridge.Editor
 			EditorGUI.indentLevel++;
 
 			DrawWxConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawXhsConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawFacebookConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawInstagramConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawQQConfig();
 			EditorGUI.indentLevel--;
 
@@ -160,8 +161,8 @@ namespace Bridge.Editor
 			{
 				EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetPackageName(packageType), EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetVersionName(packageType), EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetPackageName(packageType), GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetVersionName(packageType), GUILayout.ExpandWidth(false));
 				if (ThirdSDKPackageManager.IsOpenApi(packageType))
 				{
 					if (GUILayout.Button("Remove", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
@@ -185,7 +186,7 @@ namespace Bridge.Editor
 		{
 			if (ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat))
 			{
-				EditorGUILayout.LabelField("WeChat Open SDK Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField("WeChat Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 				EditorGUILayout.Separator();
 				EditorGUI.indentLevel++;
 				Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
@@ -197,7 +198,7 @@ namespace Bridge.Editor
 		{
 			if (ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu))
 			{
-				EditorGUILayout.LabelField("XiaoHongShu Open SDK Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField("XiaoHongShu Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 				EditorGUILayout.Separator();
 				EditorGUI.indentLevel++;
 				Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
@@ -209,7 +210,7 @@ namespace Bridge.Editor
 		{
 			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook))
 			{
-				EditorGUILayout.LabelField("Facebook Open SDK Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField("Facebook Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 				EditorGUILayout.Separator();
 				EditorGUI.indentLevel++;
 				Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
@@ -222,7 +223,11 @@ namespace Bridge.Editor
 		{
 			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Instagram))
 			{
-
+				EditorGUILayout.LabelField("Instagram Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
+				EditorGUI.indentLevel++;
+				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+				EditorGUI.indentLevel--;
 			}
 		}
 
@@ -230,7 +235,11 @@ namespace Bridge.Editor
 		{
 			if (ThirdSDKPackageManager.IsOpenApi(PackageType.QQ))
 			{
-
+				EditorGUILayout.LabelField("QQ Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
+				EditorGUI.indentLevel++;
+				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+				EditorGUI.indentLevel--;
 			}
 		}
 	}

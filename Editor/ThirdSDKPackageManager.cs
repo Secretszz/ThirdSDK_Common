@@ -176,7 +176,7 @@ namespace Bridge.Editor
 			return packageType switch
 			{
 					PackageType.WeChat => "WeChat Open SDK",
-					PackageType.XiaoHongShu => "小红书 Open SDK",
+					PackageType.XiaoHongShu => "XiaoHongShu Open SDK",
 					PackageType.Facebook => "Facebook Open SDK",
 					PackageType.Instagram => "Instagram Open SDK",
 					PackageType.QQ => "QQ Open SDK",
