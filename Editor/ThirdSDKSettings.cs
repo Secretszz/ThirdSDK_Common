@@ -62,6 +62,8 @@ namespace Bridge.Editor
 
 		public string FbClientToken;
 
+		public string FbDisplayName;
+
 		public string UniversalLink => $"https://{UniversalLinkDomain}/{UniversalLinkPath}/";
 
 		private void Save()
@@ -215,6 +217,7 @@ namespace Bridge.Editor
 				EditorGUI.indentLevel++;
 				Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 				Instance.FbClientToken = EditorGUILayout.DelayedTextField("Client Token: ", Instance.FbClientToken, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+				Instance.FbDisplayName = EditorGUILayout.DelayedTextField("Display Name: ", Instance.FbDisplayName, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 				EditorGUI.indentLevel--;
 			}
 		}
