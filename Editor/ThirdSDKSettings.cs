@@ -10,7 +10,7 @@
 
 namespace Bridge.Editor
 {
-	using Common;
+	using System;
 	using System.IO;
 	using UnityEditor;
 	using UnityEngine;
@@ -48,22 +48,28 @@ namespace Bridge.Editor
 			}
 		}
 
-		private string universalLinkDomain = "domian";
+		public bool NeedAddAssociatedDomains;
 
-		private string universalLinkPath = "project";
+		public string UniversalLinkDomain = "domian";
 
-		public string UniversalLink => $"https://{universalLinkDomain}/{universalLinkPath}/";
+		public string UniversalLinkPath = "project";
 
-		public string WxAppId { get; private set; }
+		public string WxAppId;
 
-		public string XhsAppId { get; private set; }
+		public string XhsAppId;
 
-		public string FbAppId { get; private set; }
+		public string FbAppId;
 
-		public string FbClientToken { get; private set; }
+		public string FbClientToken;
+
+		public string FbDisplayName;
+
+		public string UniversalLink => $"https://{UniversalLinkDomain}/{UniversalLinkPath}/";
 
 		private void Save()
 		{
+			string value = JsonUtility.ToJson(this, true);
+			Debug.Log("value===" + value);
 			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(this, true));
 		}
 
@@ -77,84 +83,165 @@ namespace Bridge.Editor
 			};
 		}
 
+		private static float labelWidth = 200f;
+		private static float inputWidth = 600f;
+
 		private static void PreferencesGUI()
 		{
+			EditorGUIUtility.labelWidth = labelWidth;
 			EditorGUI.BeginChangeCheck();
-
-			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel);
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			EditorGUI.indentLevel++;
 
-			Instance.universalLinkDomain = EditorGUILayout.DelayedTextField("domain", Instance.universalLinkDomain);
-
-			Instance.universalLinkPath = EditorGUILayout.DelayedTextField("path", Instance.universalLinkPath);
-
-			EditorGUILayout.HelpBox($"Universal Link: {Instance.UniversalLink}", MessageType.Info);
+			DrawApiDownload();
 
 			EditorGUI.indentLevel--;
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
+
+			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUI.indentLevel++;
+
+			bool forceOpen = ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat) || ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu) || ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook);
+			if (forceOpen)
+			{
+				Instance.NeedAddAssociatedDomains = true;
+				EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			}
+			else
+			{
+				Instance.NeedAddAssociatedDomains = EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			}
+
+			if (Instance.NeedAddAssociatedDomains)
+			{
+				Instance.UniversalLinkDomain = EditorGUILayout.DelayedTextField("domain: ", Instance.UniversalLinkDomain, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+
+				Instance.UniversalLinkPath = EditorGUILayout.DelayedTextField("path: ", Instance.UniversalLinkPath, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+
+				EditorGUILayout.LabelField("Universal Link: ", Instance.UniversalLink, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+			}
+
+			EditorGUI.indentLevel--;
+
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 
 			DrawWxConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawXhsConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			DrawFacebookConfig();
-			EditorGUILayout.Separator();
-			EditorGUILayout.Separator();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
+			DrawInstagramConfig();
+			EditorGUI.indentLevel--;
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
+			DrawQQConfig();
+			EditorGUI.indentLevel--;
 
 			if (EditorGUI.EndChangeCheck())
 				Instance.Save();
 		}
 
+		private static void DrawApiDownload()
+		{
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.LabelField("Adapter", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.LabelField("Version", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.EndHorizontal();
+
+			foreach (PackageType packageType in Enum.GetValues(typeof(PackageType)))
+			{
+				EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetPackageName(packageType), GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetVersionName(packageType), GUILayout.ExpandWidth(false));
+				if (ThirdSDKPackageManager.IsOpenApi(packageType))
+				{
+					if (GUILayout.Button("Remove", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+					{
+						ThirdSDKPackageManager.RemovePackage(packageType);
+					}
+				}
+				else
+				{
+					if (GUILayout.Button("Add", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+					{
+						ThirdSDKPackageManager.AddPackage(packageType);
+					}
+				}
+
+				EditorGUILayout.EndHorizontal();
+			}
+		}
+
 		private static void DrawWxConfig()
 		{
-			bool IsOpenWxApi = ThirdSDKTool.IsOpenWxApi();
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField("WeChat Open SDK Configuration", EditorStyles.boldLabel);
-			if (IsOpenWxApi)
+			if (ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat))
 			{
-				if (GUILayout.Button("Remove WeCaht Api Package"))
-				{
-					ThirdSDKPackageManager.RemoveWxApiPackage();
-				}
+				EditorGUILayout.LabelField("WeChat Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
+				EditorGUI.indentLevel++;
+				Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+				EditorGUI.indentLevel--;
 			}
-			else
-			{
-				if (GUILayout.Button("Add WeCaht Api Package"))
-				{
-					ThirdSDKPackageManager.AddWxApiPackage();
-				}
-			}
-			EditorGUILayout.EndHorizontal();
-			EditorGUI.indentLevel++;
-			if (IsOpenWxApi)
-			{
-				Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id", Instance.WxAppId);
-			}
-			EditorGUI.indentLevel--;
 		}
 
 		private static void DrawXhsConfig()
 		{
-			if (ThirdSDKTool.IsOpenXhsApi())
+			if (ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu))
 			{
-				EditorGUILayout.LabelField("XiaoHongShu Open SDK Configuration", EditorStyles.boldLabel);
+				EditorGUILayout.LabelField("XiaoHongShu Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
 				EditorGUI.indentLevel++;
-				Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id", Instance.XhsAppId);
+				Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 				EditorGUI.indentLevel--;
 			}
 		}
 
 		private static void DrawFacebookConfig()
 		{
-			if (ThirdSDKTool.IsOpenFBApi())
+			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook))
 			{
-				EditorGUILayout.LabelField("Facebook Open SDK Configuration", EditorStyles.boldLabel);
+				EditorGUILayout.LabelField("Facebook Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
 				EditorGUI.indentLevel++;
-				Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id", Instance.FbAppId);
-				Instance.FbClientToken = EditorGUILayout.DelayedTextField("Client Token", Instance.FbClientToken);
+				Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+				Instance.FbClientToken = EditorGUILayout.DelayedTextField("Client Token: ", Instance.FbClientToken, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+				Instance.FbDisplayName = EditorGUILayout.DelayedTextField("Display Name: ", Instance.FbDisplayName, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+				EditorGUI.indentLevel--;
+			}
+		}
+
+		private static void DrawInstagramConfig()
+		{
+			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Instagram))
+			{
+				EditorGUILayout.LabelField("Instagram Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
+				EditorGUI.indentLevel++;
+				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+				EditorGUI.indentLevel--;
+			}
+		}
+
+		private static void DrawQQConfig()
+		{
+			if (ThirdSDKPackageManager.IsOpenApi(PackageType.QQ))
+			{
+				EditorGUILayout.LabelField("QQ Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.Separator();
+				EditorGUI.indentLevel++;
+				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
 				EditorGUI.indentLevel--;
 			}
 		}

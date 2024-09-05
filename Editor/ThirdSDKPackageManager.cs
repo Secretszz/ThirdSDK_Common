@@ -25,7 +25,7 @@ namespace Bridge.Editor
 	public static class ThirdSDKPackageManager
 	{
 		#region private
-		
+
 		private static AddRequest addRequest;
 		private static RemoveRequest removeRequest;
 
@@ -92,6 +92,7 @@ namespace Bridge.Editor
 			{
 				throw new Exception("request package list failure: " + request.Error);
 			}
+
 			return request.Result.Any(x => x.name == packageName);
 
 			void ListProgress()
@@ -100,8 +101,13 @@ namespace Bridge.Editor
 			}
 		}
 
+		private static bool IsOpenApi(string startWith)
+		{
+			return AppDomain.CurrentDomain.GetAssemblies().Any(asssembly => asssembly.GetName().FullName.StartsWith(startWith));
+		}
+
 		#endregion
-		
+
 		public const string WxApiGitUrl = "https://github.com/Secretszz/ThirdSDK_WxApi.git";
 		public const string InstagramApiGitUrl = "https://github.com/Secretszz/ThirdSDK_InstagramApi.git";
 		public const string FacebookApiGitUrl = "https://github.com/Secretszz/ThirdSDK_FacebookApi.git";
@@ -114,54 +120,165 @@ namespace Bridge.Editor
 		public const string XhsApiPackageName = "com.bridge.xhsapi";
 		public const string QQApiPackageName = "com.bridge.qqapi";
 
-		public static void AddWxApiPackage()
+		public const string WxApiVersion = "1.0.0";
+		public const string InstagramApiVersion = "1.0.0";
+		public const string FacebookApiVersion = "1.0.0";
+		public const string XhsApiVersion = "1.0.0";
+		public const string QQApiVersion = "1.0.0";
+
+		public const string WxApiAsssemblyName = "Bridge.WxApi";
+		public const string XhsApiAsssemblyName = "Bridge.XhsApi";
+		public const string FBApiAsssemblyName = "Bridge.FacebookApi";
+		public const string InsApiAsssemblyName = "Bridge.InstagramApi";
+		public const string QQApiAsssemblyName = "Bridge.QQApi";
+
+		public static void AddPackage(PackageType packageType)
 		{
-			AddPackage(WxApiGitUrl);
+			AddPackage(packageType switch
+			{
+					PackageType.WeChat => WxApiGitUrl,
+					PackageType.XiaoHongShu => XhsApiGitUrl,
+					PackageType.Facebook => FacebookApiGitUrl,
+					PackageType.Instagram => InstagramApiGitUrl,
+					PackageType.QQ => QQApiGitUrl,
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			});
+		}
+
+		public static void RemovePackage(PackageType packageType)
+		{
+			RemovePackage(packageType switch
+			{
+					PackageType.WeChat => WxApiPackageName,
+					PackageType.XiaoHongShu => XhsApiPackageName,
+					PackageType.Facebook => FacebookApiPackageName,
+					PackageType.Instagram => InstagramApiPackageName,
+					PackageType.QQ => QQApiPackageName,
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			});
+		}
+
+		public static string GetVersionName(PackageType packageType)
+		{
+			return packageType switch
+			{
+					PackageType.WeChat => WxApiVersion,
+					PackageType.XiaoHongShu => XhsApiVersion,
+					PackageType.Facebook => FacebookApiVersion,
+					PackageType.Instagram => InstagramApiVersion,
+					PackageType.QQ => QQApiVersion,
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			};
 		}
 		
-		public static void RemoveWxApiPackage()
+		public static string GetPackageName(PackageType packageType)
 		{
-			RemovePackage(WxApiPackageName);
+			return packageType switch
+			{
+					PackageType.WeChat => "WeChat Open SDK",
+					PackageType.XiaoHongShu => "XiaoHongShu Open SDK",
+					PackageType.Facebook => "Facebook Open SDK",
+					PackageType.Instagram => "Instagram Open SDK",
+					PackageType.QQ => "QQ Open SDK",
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			};
 		}
-		
-		public static void AddInstagramApiPackage()
+
+		public static bool IsOpenApi(PackageType packageType)
 		{
-			AddPackage(InstagramApiGitUrl);
+			return IsOpenApi(packageType switch
+			{
+					PackageType.WeChat => WxApiAsssemblyName,
+					PackageType.XiaoHongShu => XhsApiAsssemblyName,
+					PackageType.Facebook => FBApiAsssemblyName,
+					PackageType.Instagram => InsApiAsssemblyName,
+					PackageType.QQ => QQApiAsssemblyName,
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			});
 		}
-		
-		public static void RemoveInstagramApiPackage()
-		{
-			RemovePackage(InstagramApiPackageName);
-		}
-		
-		public static void AddFacebookApiPackage()
-		{
-			AddPackage(FacebookApiGitUrl);
-		}
-		
-		public static void RemoveFacebookApiPackage()
-		{
-			RemovePackage(FacebookApiPackageName);
-		}
-		
-		public static void AddXhsApiPackage()
-		{
-			AddPackage(XhsApiGitUrl);
-		}
-		
-		public static void RemoveXhsApiPackage()
-		{
-			RemovePackage(XhsApiPackageName);
-		}
-		
-		public static void AddQQApiPackage()
-		{
-			AddPackage(QQApiGitUrl);
-		}
-		
-		public static void RemoveQQApiPackage()
-		{
-			RemovePackage(QQApiPackageName);
-		}
+
+		// public static void AddWxApiPackage()
+		// {
+		// 	AddPackage(WxApiGitUrl);
+		// }
+		//
+		// public static void RemoveWxApiPackage()
+		// {
+		// 	RemovePackage(WxApiPackageName);
+		// }
+		//
+		// public static void AddInstagramApiPackage()
+		// {
+		// 	AddPackage(InstagramApiGitUrl);
+		// }
+		//
+		// public static void RemoveInstagramApiPackage()
+		// {
+		// 	RemovePackage(InstagramApiPackageName);
+		// }
+		//
+		// public static void AddFacebookApiPackage()
+		// {
+		// 	AddPackage(FacebookApiGitUrl);
+		// }
+		//
+		// public static void RemoveFacebookApiPackage()
+		// {
+		// 	RemovePackage(FacebookApiPackageName);
+		// }
+		//
+		// public static void AddXhsApiPackage()
+		// {
+		// 	AddPackage(XhsApiGitUrl);
+		// }
+		//
+		// public static void RemoveXhsApiPackage()
+		// {
+		// 	RemovePackage(XhsApiPackageName);
+		// }
+		//
+		// public static void AddQQApiPackage()
+		// {
+		// 	AddPackage(QQApiGitUrl);
+		// }
+		//
+		// public static void RemoveQQApiPackage()
+		// {
+		// 	RemovePackage(QQApiPackageName);
+		// }
+		//
+		// public static bool IsOpenWxApi()
+		// {
+		// 	return IsOpenApi(WxApiAsssemblyName);
+		// }
+		//
+		// public static bool IsOpenXhsApi()
+		// {
+		// 	return IsOpenApi(XhsApiAsssemblyName);
+		// }
+		//
+		// public static bool IsOpenFBApi()
+		// {
+		// 	return IsOpenApi(FBApiAsssemblyName);
+		// }
+		//
+		// public static bool IsOpenInsApi()
+		// {
+		// 	return IsOpenApi(InsApiAsssemblyName);
+		// }
+		//
+		// public static bool IsOpenQQApi()
+		// {
+		// 	return IsOpenApi(QQApiAsssemblyName);
+		// }
+	}
+
+	public enum PackageType
+	{
+		WeChat,
+		XiaoHongShu,
+		Facebook,
+		Instagram,
+		QQ
 	}
 }
