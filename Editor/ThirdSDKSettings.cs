@@ -89,7 +89,6 @@ namespace Bridge.Editor
 		private static void PreferencesGUI()
 		{
 			EditorGUIUtility.labelWidth = labelWidth;
-			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			EditorGUI.indentLevel++;
 
@@ -99,6 +98,7 @@ namespace Bridge.Editor
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			EditorGUI.indentLevel++;
 
+			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 			EditorGUI.indentLevel++;
 
