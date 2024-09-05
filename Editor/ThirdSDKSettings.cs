@@ -138,7 +138,6 @@ namespace Bridge.Editor
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			EditorGUI.indentLevel++;
 			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-			EditorGUI.indentLevel++;
 
 			bool forceOpen = ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat) || ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu) || ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook);
 			if (forceOpen)
@@ -161,7 +160,6 @@ namespace Bridge.Editor
 			}
 
 			EditorGUI.indentLevel--;
-			EditorGUI.indentLevel--;
 		}
 
 		private static void DrawApiConfig()
@@ -174,7 +172,6 @@ namespace Bridge.Editor
 					EditorGUI.indentLevel++;
 					EditorGUILayout.LabelField($"{ThirdSDKPackageManager.GetPackageName(packageType)} Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 					EditorGUILayout.Separator();
-					EditorGUI.indentLevel++;
 					switch (packageType)
 					{
 						case PackageType.WeChat:
@@ -197,7 +194,6 @@ namespace Bridge.Editor
 						default:
 							throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null);
 					}
-					EditorGUI.indentLevel--;
 					EditorGUI.indentLevel--;
 				}
 			}
