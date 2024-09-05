@@ -175,11 +175,11 @@ namespace Bridge.Editor
 		{
 			return packageType switch
 			{
-					PackageType.WeChat => "WeChat Open SDK",
-					PackageType.XiaoHongShu => "XiaoHongShu Open SDK",
-					PackageType.Facebook => "Facebook Open SDK",
-					PackageType.Instagram => "Instagram Open SDK",
-					PackageType.QQ => "QQ Open SDK",
+					PackageType.WeChat => "WeChat",
+					PackageType.XiaoHongShu => "XiaoHongShu",
+					PackageType.Facebook => "Facebook",
+					PackageType.Instagram => "Instagram",
+					PackageType.QQ => "QQ",
 					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
 			};
 		}

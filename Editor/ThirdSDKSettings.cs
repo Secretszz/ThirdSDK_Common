@@ -68,8 +68,6 @@ namespace Bridge.Editor
 
 		private void Save()
 		{
-			string value = JsonUtility.ToJson(this, true);
-			Debug.Log("value===" + value);
 			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(this, true));
 		}
 
@@ -89,16 +87,56 @@ namespace Bridge.Editor
 		private static void PreferencesGUI()
 		{
 			EditorGUIUtility.labelWidth = labelWidth;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-
 			DrawApiDownload();
+			EditorGUI.BeginChangeCheck();
+			DrawUniversalLink();
+			DrawApiConfig();
+			if (EditorGUI.EndChangeCheck())
+				Instance.Save();
+		}
 
-			EditorGUI.indentLevel--;
+		private static void DrawApiDownload()
+		{
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			EditorGUI.indentLevel++;
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.LabelField("Adapter", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.LabelField("Version", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+			EditorGUILayout.EndHorizontal();
+
+			foreach (PackageType packageType in Enum.GetValues(typeof(PackageType)))
+			{
+				EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.LabelField($"{ThirdSDKPackageManager.GetPackageName(packageType)} Open SDK", GUILayout.ExpandWidth(false));
+				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetVersionName(packageType), GUILayout.ExpandWidth(false));
+				if (ThirdSDKPackageManager.IsOpenApi(packageType))
+				{
+					if (GUILayout.Button("Remove", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+					{
+						ThirdSDKPackageManager.RemovePackage(packageType);
+					}
+				}
+				else
+				{
+					if (GUILayout.Button("Add", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+					{
+						ThirdSDKPackageManager.AddPackage(packageType);
+					}
+				}
+
+				EditorGUILayout.EndHorizontal();
+			}
+			
+			EditorGUI.indentLevel--;
+		}
+
+		private static void DrawUniversalLink()
+		{
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+			EditorGUI.indentLevel++;
 			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 			EditorGUI.indentLevel++;
 
@@ -123,126 +161,45 @@ namespace Bridge.Editor
 			}
 
 			EditorGUI.indentLevel--;
-
 			EditorGUI.indentLevel--;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-
-			DrawWxConfig();
-			EditorGUI.indentLevel--;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-			DrawXhsConfig();
-			EditorGUI.indentLevel--;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-			DrawFacebookConfig();
-			EditorGUI.indentLevel--;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-			DrawInstagramConfig();
-			EditorGUI.indentLevel--;
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			EditorGUI.indentLevel++;
-			DrawQQConfig();
-			EditorGUI.indentLevel--;
-
-			if (EditorGUI.EndChangeCheck())
-				Instance.Save();
 		}
 
-		private static void DrawApiDownload()
+		private static void DrawApiConfig()
 		{
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField("Adapter", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-			EditorGUILayout.LabelField("Version", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-			EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-			EditorGUILayout.EndHorizontal();
-
 			foreach (PackageType packageType in Enum.GetValues(typeof(PackageType)))
 			{
-				EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetPackageName(packageType), GUILayout.ExpandWidth(false));
-				EditorGUILayout.LabelField(ThirdSDKPackageManager.GetVersionName(packageType), GUILayout.ExpandWidth(false));
 				if (ThirdSDKPackageManager.IsOpenApi(packageType))
 				{
-					if (GUILayout.Button("Remove", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+					EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+					EditorGUI.indentLevel++;
+					EditorGUILayout.LabelField($"{ThirdSDKPackageManager.GetPackageName(packageType)} Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+					EditorGUILayout.Separator();
+					EditorGUI.indentLevel++;
+					switch (packageType)
 					{
-						ThirdSDKPackageManager.RemovePackage(packageType);
+						case PackageType.WeChat:
+							Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							break;
+						case PackageType.XiaoHongShu:
+							Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							break;
+						case PackageType.Facebook:
+							Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							Instance.FbClientToken = EditorGUILayout.DelayedTextField("Client Token: ", Instance.FbClientToken, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							Instance.FbDisplayName = EditorGUILayout.DelayedTextField("Display Name: ", Instance.FbDisplayName, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							break;
+						case PackageType.Instagram:
+							EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+							break;
+						case PackageType.QQ:
+							EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+							break;
+						default:
+							throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null);
 					}
+					EditorGUI.indentLevel--;
+					EditorGUI.indentLevel--;
 				}
-				else
-				{
-					if (GUILayout.Button("Add", GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
-					{
-						ThirdSDKPackageManager.AddPackage(packageType);
-					}
-				}
-
-				EditorGUILayout.EndHorizontal();
-			}
-		}
-
-		private static void DrawWxConfig()
-		{
-			if (ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat))
-			{
-				EditorGUILayout.LabelField("WeChat Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.Separator();
-				EditorGUI.indentLevel++;
-				Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-				EditorGUI.indentLevel--;
-			}
-		}
-
-		private static void DrawXhsConfig()
-		{
-			if (ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu))
-			{
-				EditorGUILayout.LabelField("XiaoHongShu Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.Separator();
-				EditorGUI.indentLevel++;
-				Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-				EditorGUI.indentLevel--;
-			}
-		}
-
-		private static void DrawFacebookConfig()
-		{
-			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook))
-			{
-				EditorGUILayout.LabelField("Facebook Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.Separator();
-				EditorGUI.indentLevel++;
-				Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-				Instance.FbClientToken = EditorGUILayout.DelayedTextField("Client Token: ", Instance.FbClientToken, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-				Instance.FbDisplayName = EditorGUILayout.DelayedTextField("Display Name: ", Instance.FbDisplayName, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-				EditorGUI.indentLevel--;
-			}
-		}
-
-		private static void DrawInstagramConfig()
-		{
-			if (ThirdSDKPackageManager.IsOpenApi(PackageType.Instagram))
-			{
-				EditorGUILayout.LabelField("Instagram Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.Separator();
-				EditorGUI.indentLevel++;
-				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
-				EditorGUI.indentLevel--;
-			}
-		}
-
-		private static void DrawQQConfig()
-		{
-			if (ThirdSDKPackageManager.IsOpenApi(PackageType.QQ))
-			{
-				EditorGUILayout.LabelField("QQ Configuration", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.Separator();
-				EditorGUI.indentLevel++;
-				EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
-				EditorGUI.indentLevel--;
 			}
 		}
 	}
