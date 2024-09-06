@@ -58,6 +58,8 @@ namespace Bridge.Editor
 
 		public string XhsAppId;
 
+		public string XhsAppId_iOS;
+
 		public string FbAppId;
 
 		public string FbClientToken;
@@ -178,7 +180,8 @@ namespace Bridge.Editor
 							Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 							break;
 						case PackageType.XiaoHongShu:
-							Instance.XhsAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							Instance.XhsAppId = EditorGUILayout.DelayedTextField("Android App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+							Instance.XhsAppId_iOS = EditorGUILayout.DelayedTextField("iOS App Id: ", Instance.XhsAppId_iOS, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 							break;
 						case PackageType.Facebook:
 							Instance.FbAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.FbAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
