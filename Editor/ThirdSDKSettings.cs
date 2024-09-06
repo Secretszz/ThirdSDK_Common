@@ -48,7 +48,7 @@ namespace Bridge.Editor
 			}
 		}
 
-		public bool NeedAddAssociatedDomains;
+		public bool NeedAddAssociatedDomains = true;
 
 		public string UniversalLinkDomain = "domian";
 
@@ -141,26 +141,15 @@ namespace Bridge.Editor
 			EditorGUI.indentLevel++;
 			EditorGUILayout.LabelField("Universal Link", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 
-			bool forceOpen = ThirdSDKPackageManager.IsOpenApi(PackageType.WeChat) || ThirdSDKPackageManager.IsOpenApi(PackageType.XiaoHongShu) || ThirdSDKPackageManager.IsOpenApi(PackageType.Facebook);
-			if (forceOpen)
-			{
-				Instance.NeedAddAssociatedDomains = true;
-				EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
-			}
-			else
-			{
-				Instance.NeedAddAssociatedDomains = EditorGUILayout.Toggle("Open Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
-			}
+			Instance.UniversalLinkDomain = EditorGUILayout.DelayedTextField("domain: ", Instance.UniversalLinkDomain, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 
-			if (Instance.NeedAddAssociatedDomains)
-			{
-				Instance.UniversalLinkDomain = EditorGUILayout.DelayedTextField("domain: ", Instance.UniversalLinkDomain, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+			Instance.UniversalLinkPath = EditorGUILayout.DelayedTextField("path: ", Instance.UniversalLinkPath, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 
-				Instance.UniversalLinkPath = EditorGUILayout.DelayedTextField("path: ", Instance.UniversalLinkPath, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-
-				EditorGUILayout.LabelField("Universal Link: ", Instance.UniversalLink, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
-			}
-
+			EditorGUILayout.LabelField("Universal Link: ", Instance.UniversalLink, EditorStyles.boldLabel, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
+			EditorGUILayout.BeginHorizontal();
+			Instance.NeedAddAssociatedDomains = EditorGUILayout.Toggle("Add Associated Domains", Instance.NeedAddAssociatedDomains, GUILayout.ExpandWidth(false));
+			EditorGUILayout.LabelField("If enabled, automatically add Associated Domains. Use in iOS environment", EditorStyles.boldLabel);
+			EditorGUILayout.EndHorizontal();
 			EditorGUI.indentLevel--;
 		}
 
