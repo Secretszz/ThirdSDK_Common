@@ -120,11 +120,11 @@ namespace Bridge.Editor
 		public const string XhsApiPackageName = "com.bridge.xhsapi";
 		public const string QQApiPackageName = "com.bridge.qqapi";
 
-		public const string WxApiVersion = "1.0.0";
-		public const string InstagramApiVersion = "1.0.0";
-		public const string FacebookApiVersion = "1.0.0";
-		public const string XhsApiVersion = "1.0.0";
-		public const string QQApiVersion = "1.0.0";
+		public const string WxApiVersion = "1.0.1";
+		public const string InstagramApiVersion = "1.0.1";
+		public const string FacebookApiVersion = "1.0.1";
+		public const string XhsApiVersion = "1.0.1";
+		public const string QQApiVersion = "1.0.1";
 
 		public const string WxApiAsssemblyName = "Bridge.WxApi";
 		public const string XhsApiAsssemblyName = "Bridge.XhsApi";
