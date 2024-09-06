@@ -1,4 +1,4 @@
-package com.bridge.common;
+package com.bridge.common.listener;
 
 /**
  * 通用监听回调
