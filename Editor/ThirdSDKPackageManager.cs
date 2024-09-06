@@ -197,80 +197,32 @@ namespace Bridge.Editor
 			});
 		}
 
-		// public static void AddWxApiPackage()
-		// {
-		// 	AddPackage(WxApiGitUrl);
-		// }
-		//
-		// public static void RemoveWxApiPackage()
-		// {
-		// 	RemovePackage(WxApiPackageName);
-		// }
-		//
-		// public static void AddInstagramApiPackage()
-		// {
-		// 	AddPackage(InstagramApiGitUrl);
-		// }
-		//
-		// public static void RemoveInstagramApiPackage()
-		// {
-		// 	RemovePackage(InstagramApiPackageName);
-		// }
-		//
-		// public static void AddFacebookApiPackage()
-		// {
-		// 	AddPackage(FacebookApiGitUrl);
-		// }
-		//
-		// public static void RemoveFacebookApiPackage()
-		// {
-		// 	RemovePackage(FacebookApiPackageName);
-		// }
-		//
-		// public static void AddXhsApiPackage()
-		// {
-		// 	AddPackage(XhsApiGitUrl);
-		// }
-		//
-		// public static void RemoveXhsApiPackage()
-		// {
-		// 	RemovePackage(XhsApiPackageName);
-		// }
-		//
-		// public static void AddQQApiPackage()
-		// {
-		// 	AddPackage(QQApiGitUrl);
-		// }
-		//
-		// public static void RemoveQQApiPackage()
-		// {
-		// 	RemovePackage(QQApiPackageName);
-		// }
-		//
-		// public static bool IsOpenWxApi()
-		// {
-		// 	return IsOpenApi(WxApiAsssemblyName);
-		// }
-		//
-		// public static bool IsOpenXhsApi()
-		// {
-		// 	return IsOpenApi(XhsApiAsssemblyName);
-		// }
-		//
-		// public static bool IsOpenFBApi()
-		// {
-		// 	return IsOpenApi(FBApiAsssemblyName);
-		// }
-		//
-		// public static bool IsOpenInsApi()
-		// {
-		// 	return IsOpenApi(InsApiAsssemblyName);
-		// }
-		//
-		// public static bool IsOpenQQApi()
-		// {
-		// 	return IsOpenApi(QQApiAsssemblyName);
-		// }
+		public static string GetUnityPackagePath(string packageName)
+		{
+			var request = Client.List(true);
+			while (request.IsCompleted == false)
+			{
+				System.Threading.Thread.Sleep(100);
+			}
+
+			var pkgs = request.Result;
+			if (pkgs == null)
+				return "";
+			foreach (var pkg in pkgs)
+			{
+				if (pkg.name == packageName)
+				{
+					return pkg.source switch
+					{
+							PackageSource.Local => pkg.resolvedPath,
+							PackageSource.Embedded => pkg.resolvedPath,
+							_ => pkg.resolvedPath
+					};
+				}
+			}
+
+			return "";
+		}
 	}
 
 	public enum PackageType
