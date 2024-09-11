@@ -12,6 +12,7 @@ def getCompileSdk(unityLib) {
 }
 
 dependencies {
+    implementation('androidx.annotation:annotation:1.8.2')
 	##FACEBOOK_DEPENDENCIES##
 	##XHS_DEPENDENCIES##
 	##WX_DEPENDENCIES##

@@ -1,10 +1,10 @@
 package com.bridge.common.listener;
 
-public interface ILoginListener {
+public interface IBridgeListener {
     /**
      * 分享成功
      */
-    void onSuccess(String accessToken);
+    void onSuccess(String result);
 
     /**
      * 用户取消登录

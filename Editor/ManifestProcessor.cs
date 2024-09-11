@@ -33,7 +33,16 @@ namespace Bridge.Common
 
         public static XNamespace ns = "http://schemas.android.com/apk/res/android";
 
-        public static Dictionary<string, string> ReplaceBuildDefinedCache = new Dictionary<string, string>();
+        public const string FACEBOOK_DEPENDENCIES = "##FACEBOOK_DEPENDENCIES##";
+        public const string XHS_DEPENDENCIES = "##XHS_DEPENDENCIES##";
+        public const string WX_DEPENDENCIES = "##WX_DEPENDENCIES##";
+
+        public static Dictionary<string, string> ReplaceBuildDefinedCache = new Dictionary<string, string>()
+        {
+                {FACEBOOK_DEPENDENCIES, string.Empty},
+                {XHS_DEPENDENCIES, string.Empty},
+                {WX_DEPENDENCIES, string.Empty}
+        };
 
         [PostProcessBuild(10100)]
         public static void OnPostprocessBuild(BuildTarget target, string projectPath)
