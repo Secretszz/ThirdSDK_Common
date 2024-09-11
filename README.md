@@ -12,6 +12,8 @@
 
 [QQ](https://github.com/Secretszz/ThirdSDK_QQApi.git)
 
+[支付宝](https://github.com/Secretszz/ThirdSDK_AliApi.git)
+
 ## 下载适配包
 ![image](https://github.com/user-attachments/assets/28282cee-a651-48fa-92f1-d12134b6a5fd)
 
