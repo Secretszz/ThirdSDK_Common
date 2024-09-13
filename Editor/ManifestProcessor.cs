@@ -36,12 +36,14 @@ namespace Bridge.Common
         public const string FACEBOOK_DEPENDENCIES = "##FACEBOOK_DEPENDENCIES##";
         public const string XHS_DEPENDENCIES = "##XHS_DEPENDENCIES##";
         public const string WX_DEPENDENCIES = "##WX_DEPENDENCIES##";
+        public const string ALI_DEPENDENCIES = "##ALI_DEPENDENCIES##";
 
         public static Dictionary<string, string> ReplaceBuildDefinedCache = new Dictionary<string, string>()
         {
                 {FACEBOOK_DEPENDENCIES, string.Empty},
                 {XHS_DEPENDENCIES, string.Empty},
-                {WX_DEPENDENCIES, string.Empty}
+                {WX_DEPENDENCIES, string.Empty},
+                {ALI_DEPENDENCIES, string.Empty}
         };
 
         [PostProcessBuild(10100)]

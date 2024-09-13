@@ -168,6 +168,9 @@ namespace Bridge.Editor
 						case PackageType.WeChat:
 							Instance.WxAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.WxAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 							break;
+						case PackageType.AliPay:
+							EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+							break;
 						case PackageType.XiaoHongShu:
 							Instance.XhsAppId = EditorGUILayout.DelayedTextField("Android App Id: ", Instance.XhsAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 							Instance.XhsAppId_iOS = EditorGUILayout.DelayedTextField("iOS App Id: ", Instance.XhsAppId_iOS, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
