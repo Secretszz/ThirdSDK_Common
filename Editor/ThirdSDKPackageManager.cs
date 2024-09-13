@@ -109,24 +109,28 @@ namespace Bridge.Editor
 		#endregion
 
 		public const string WxApiGitUrl = "https://github.com/Secretszz/ThirdSDK_WxApi.git";
+		public const string AliApiGitUrl = "https://github.com/Secretszz/ThirdSDK_AliApi.git";
 		public const string InstagramApiGitUrl = "https://github.com/Secretszz/ThirdSDK_InstagramApi.git";
 		public const string FacebookApiGitUrl = "https://github.com/Secretszz/ThirdSDK_FacebookApi.git";
 		public const string XhsApiGitUrl = "https://github.com/Secretszz/ThirdSDK_XhsApi.git";
 		public const string QQApiGitUrl = "https://github.com/Secretszz/ThirdSDK_QQApi.git";
 
 		public const string WxApiPackageName = "com.bridge.wxapi";
+		public const string AliApiPackageName = "com.bridge.aliapi";
 		public const string InstagramApiPackageName = "com.bridge.ins";
 		public const string FacebookApiPackageName = "com.bridge.facebook";
 		public const string XhsApiPackageName = "com.bridge.xhsapi";
 		public const string QQApiPackageName = "com.bridge.qqapi";
 
-		public const string WxApiVersion = "1.0.1";
-		public const string InstagramApiVersion = "1.0.1";
-		public const string FacebookApiVersion = "1.0.1";
-		public const string XhsApiVersion = "1.0.1";
-		public const string QQApiVersion = "1.0.1";
+		public const string WxApiVersion = "1.0.2";
+		public const string AliApiVersion = "1.0.2";
+		public const string InstagramApiVersion = "1.0.2";
+		public const string FacebookApiVersion = "1.0.2";
+		public const string XhsApiVersion = "1.0.2";
+		public const string QQApiVersion = "1.0.2";
 
 		public const string WxApiAsssemblyName = "Bridge.WxApi";
+		public const string AliApiAsssemblyName = "Bridge.AliApi";
 		public const string XhsApiAsssemblyName = "Bridge.XhsApi";
 		public const string FBApiAsssemblyName = "Bridge.FacebookApi";
 		public const string InsApiAsssemblyName = "Bridge.InstagramApi";
@@ -137,6 +141,7 @@ namespace Bridge.Editor
 			AddPackage(packageType switch
 			{
 					PackageType.WeChat => WxApiGitUrl,
+					PackageType.AliPay => AliApiGitUrl,
 					PackageType.XiaoHongShu => XhsApiGitUrl,
 					PackageType.Facebook => FacebookApiGitUrl,
 					PackageType.Instagram => InstagramApiGitUrl,
@@ -150,6 +155,7 @@ namespace Bridge.Editor
 			RemovePackage(packageType switch
 			{
 					PackageType.WeChat => WxApiPackageName,
+					PackageType.AliPay => AliApiPackageName,
 					PackageType.XiaoHongShu => XhsApiPackageName,
 					PackageType.Facebook => FacebookApiPackageName,
 					PackageType.Instagram => InstagramApiPackageName,
@@ -163,6 +169,7 @@ namespace Bridge.Editor
 			return packageType switch
 			{
 					PackageType.WeChat => WxApiVersion,
+					PackageType.AliPay => AliApiVersion,
 					PackageType.XiaoHongShu => XhsApiVersion,
 					PackageType.Facebook => FacebookApiVersion,
 					PackageType.Instagram => InstagramApiVersion,
@@ -176,6 +183,7 @@ namespace Bridge.Editor
 			return packageType switch
 			{
 					PackageType.WeChat => "WeChat",
+					PackageType.AliPay => "AliPay",
 					PackageType.XiaoHongShu => "XiaoHongShu",
 					PackageType.Facebook => "Facebook",
 					PackageType.Instagram => "Instagram",
@@ -189,6 +197,7 @@ namespace Bridge.Editor
 			return IsOpenApi(packageType switch
 			{
 					PackageType.WeChat => WxApiAsssemblyName,
+					PackageType.AliPay => AliApiAsssemblyName,
 					PackageType.XiaoHongShu => XhsApiAsssemblyName,
 					PackageType.Facebook => FBApiAsssemblyName,
 					PackageType.Instagram => InsApiAsssemblyName,
@@ -228,6 +237,7 @@ namespace Bridge.Editor
 	public enum PackageType
 	{
 		WeChat,
+		AliPay,
 		XiaoHongShu,
 		Facebook,
 		Instagram,
