@@ -36,14 +36,15 @@ public static class FileTool
 			Debug.Log("file.FullName===" + file.FullName);
 			if(file.FullName.EndsWith(".meta"))
 				continue;
-			string temppath = System.IO.Path.Combine(destDirName, file.Name);
+			string temppath = Path.Combine(destDirName, file.Name);
+			if (File.Exists(temppath)) File.Delete(temppath);
 			file.CopyTo(temppath, false);
 		}
 
 		DirectoryInfo[] dirs = dir.GetDirectories();
 		foreach (DirectoryInfo subdir in dirs)
 		{
-			string temppath = System.IO.Path.Combine(destDirName, subdir.Name);
+			string temppath = Path.Combine(destDirName, subdir.Name);
 			DirectoryCopy(subdir.FullName, temppath);
 		}
 	}

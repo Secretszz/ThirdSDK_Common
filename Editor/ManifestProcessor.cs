@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 #if UNITY_ANDROID
 namespace Bridge.Common
@@ -24,11 +25,11 @@ namespace Bridge.Common
         /// <summary>
         /// 依赖包文件夹位置
         /// </summary>
-        public const string MAIN_LIB_DIR = "unityLibrary/ThirdSDK.androidlib";
+        private const string MAIN_LIB_DIR = "unityLibrary/ThirdSDK.androidlib";
+        private const string MANIFEST_RELATIVE_PATH = MAIN_LIB_DIR + "/src/main/AndroidManifest.xml";
+        private const string BUILD_GRADLE_PATH = MAIN_LIB_DIR + "/build.gradle";
         public const string NATIVE_CODE_DIR = MAIN_LIB_DIR + "/src/main/java/com/bridge";
-        public const string MANIFEST_RELATIVE_PATH = MAIN_LIB_DIR + "/src/main/AndroidManifest.xml";
         public const string STRINGS_XML_PATH = MAIN_LIB_DIR + "/src/main/res/values/strings.xml";
-        public const string BUILD_GRADLE_PATH = MAIN_LIB_DIR + "/build.gradle";
         public const string LIB_Dir = MAIN_LIB_DIR + "/libs";
 
         public static XNamespace ns = "http://schemas.android.com/apk/res/android";
@@ -46,6 +47,9 @@ namespace Bridge.Common
                 {ALI_DEPENDENCIES, string.Empty}
         };
 
+        public static List<XElement> QueriesElements = new List<XElement>();
+        public static List<XElement> ApplicationElements = new List<XElement>();
+
         [PostProcessBuild(10100)]
         public static void OnPostprocessBuild(BuildTarget target, string projectPath)
         {
@@ -56,6 +60,64 @@ namespace Bridge.Common
                 code = code.Replace(temp.Key, temp.Value);
             }
             File.WriteAllText(filePath, code.ToString());
+
+            RefreshLaunchManifest(projectPath);
+        }
+        
+        private static void RefreshLaunchManifest(string projectPath)
+        {
+            string manifestPath = Path.Combine(projectPath, MANIFEST_RELATIVE_PATH);
+
+            XDocument manifest;
+            try
+            {
+                manifest = XDocument.Load(manifestPath);
+            }
+#pragma warning disable 0168
+            catch (IOException e)
+#pragma warning restore 0168
+            {
+                LogBuildFailed();
+                return;
+            }
+
+            XElement elemManifest = manifest.Element("manifest");
+            if (elemManifest == null)
+            {
+                LogBuildFailed();
+                return;
+            }
+            
+            XElement queries = elemManifest.Element("queries");
+            if (queries == null)
+            {
+                queries = new XElement("queries");
+                elemManifest.Add(queries);
+            }
+
+            for (int i = 0; i < QueriesElements.Count; i++)
+            {
+                queries.Add(QueriesElements[i]);
+            }
+
+            XElement elemApplication = elemManifest.Element("application");
+            if (elemApplication == null)
+            {
+                LogBuildFailed();
+                return;
+            }
+
+            for (int i = 0; i < ApplicationElements.Count; i++)
+            {
+                elemApplication.Add(ApplicationElements[i]);
+            }
+
+            elemManifest.Save(manifestPath);
+        }
+        
+        private static void LogBuildFailed()
+        {
+            Debug.LogWarning("设置配置失败");
         }
     }
 }
