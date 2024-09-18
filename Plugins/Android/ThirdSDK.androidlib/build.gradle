@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation('androidx.annotation:annotation:1.8.2')
+    implementation('androidx.contentpager:contentpager:1.0.0')
 	##FACEBOOK_DEPENDENCIES##
 	##XHS_DEPENDENCIES##
 	##WX_DEPENDENCIES##
