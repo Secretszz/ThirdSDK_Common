@@ -20,8 +20,6 @@ namespace Bridge.Editor
 	/// </summary>
 	internal static class IOSProcessor
 	{
-		private const string ApiPath = "Libraries/ThirdSDK/WxApi/Plugins/iOS/WeChatSDKManager.mm";
-
 		[PostProcessBuild(10000)]
 		public static void OnPostProcessBuild(BuildTarget target, string pathToBuildProject)
 		{
