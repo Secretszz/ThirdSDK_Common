@@ -12,7 +12,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bridge.Editor
+namespace Bridge.Common
 {
 	using UnityEditor;
 	using UnityEditor.PackageManager;

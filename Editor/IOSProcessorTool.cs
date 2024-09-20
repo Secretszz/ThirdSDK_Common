@@ -10,7 +10,7 @@
 
 #if UNITY_IOS
 
-namespace Bridge.Editor
+namespace Bridge.Common
 {
 	using System;
 	using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Bridge.Editor
 	/// </summary>
 	public static class IOSProcessorTool
 	{
-		public static void AddApplicationQueriesSchemes(this PlistElementDict rootDic, string[] items)
+		public static void AddApplicationQueriesSchemes(this PlistElementDict rootDic, params string[] items)
 		{
 			PlistElementArray plistElementList = rootDic.GetElementArray("LSApplicationQueriesSchemes");
 			string[] list = plistElementList.values.Select(x => x.AsString()).ToArray();
