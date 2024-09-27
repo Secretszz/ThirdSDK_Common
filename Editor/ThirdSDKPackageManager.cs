@@ -206,8 +206,18 @@ namespace Bridge.Common
 			});
 		}
 
-		public static string GetUnityPackagePath(string packageName)
+		public static string GetUnityPackagePath(PackageType packageType)
 		{
+			string packageName = packageType switch
+			{
+					PackageType.WeChat => WxApiPackageName,
+					PackageType.AliPay => AliApiPackageName,
+					PackageType.XiaoHongShu => XhsApiPackageName,
+					PackageType.Facebook => FacebookApiPackageName,
+					PackageType.Instagram => InstagramApiPackageName,
+					PackageType.QQ => QQApiPackageName,
+					_ => throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null)
+			};
 			var request = Client.List(true);
 			while (request.IsCompleted == false)
 			{
