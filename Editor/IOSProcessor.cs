@@ -9,7 +9,7 @@
 // *******************************************
 
 #if UNITY_IOS
-namespace Bridge.Editor
+namespace Bridge.Common
 {
 	using UnityEditor;
 	using UnityEditor.Callbacks;

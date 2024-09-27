@@ -1,16 +1,14 @@
 //
-//  JsonUtil.m
+//  CommonApi.m
 //  UnityFramework
 //
-//  Created by 晴天 on 2023/10/10.
+//  Created by 晴天 on 2024/9/23.
 //
 
 #import <Foundation/Foundation.h>
-#import "JsonUtil.h"
-#import <objc/runtime.h>
+#import "CommonApi.h"
 
-@implementation JsonUtil
-
+@implementation CommonApi
 
 +(NSString *)objectToJson:(id)obj{
     if (obj == nil) {

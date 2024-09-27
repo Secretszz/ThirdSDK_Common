@@ -8,7 +8,7 @@
 // Create Time:		2024/09/02 11:16:59
 // *******************************************
 
-namespace Bridge.Editor
+namespace Bridge.Common
 {
 	using System;
 	using System.IO;
