@@ -96,4 +96,59 @@
     }
 }
 
++(bool)init {
+    return YES;
+}
+
++(bool)vibrator:(int)effectType {
+    UIImpactFeedbackGenerator* generator;
+    if (effectType == VibratorEffectTypeLow) {
+        generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleLight];
+    } else if (effectType == VibratorEffectTypeHigh){
+        generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleHeavy];
+    } else {
+        generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleMedium];
+    }
+
+    [generator impactOccurred];
+    return YES;
+}
+
++(NSString *)getCountryInfo{
+    NSURL* url = [NSURL URLWithString:@"https://api.ipify.org?format=json"];
+    NSError* error = nil;
+    NSMutableString* ip = [NSMutableString stringWithContentsOfURL:url
+                                                          encoding:NSUTF8StringEncoding
+                                                             error:&error];
+    NSData* data = [ip dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    
+    url = [NSURL URLWithString:[NSString stringWithFormat:@"https://ipinfo.io/%@/json", [dict objectForKey:@"ip"]]];
+    ip = [NSMutableString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+    return ip;
+}
+
 @end
+
+#pragma mark extern function
+
+extern "C" void c_platform_tools_init(U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
+    if ([MobilePlatformTools init]){
+        onSuccess("");
+    } else {
+        onError(-1, "");
+    }
+}
+
+extern "C" void c_platform_tools_vibrator(int effectType, U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
+    if ([MobilePlatformTools vibrator:effectType]){
+        onSuccess("");
+    } else {
+        onError(-1, "");
+    }
+}
+
+extern "C" void c_platform_tools_getCountryInfo(U3DBridgeCallback_Success onSuccess){
+    NSString* resp = [MobilePlatformTools getCountryInfo];
+    onSuccess([resp UTF8String]);
+}

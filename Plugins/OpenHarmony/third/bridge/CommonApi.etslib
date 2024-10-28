@@ -1,0 +1,183 @@
+import { BusinessError } from '@kit.BasicServicesKit'
+import { vibrator } from '@kit.SensorServiceKit';
+import geoLocationManager from '@ohos.geoLocationManager';
+import { Log } from './Log';
+
+const kTag = "CommonApi"
+
+export function RegisterCommonApi() {
+  let register:Record<string, object> = {}
+  register["CommonApi"] = CommonApi;
+  register["BridgeCallback"] = new BridgeCallback;
+  return register;
+}
+
+export default class CommonApi{
+  private static instance : CommonApi;
+
+  public static getInstance(){
+    if (CommonApi.instance == null) {
+      CommonApi.instance = new CommonApi();
+    }
+    return CommonApi.instance;
+  }
+
+  /**
+   * 初始化sdk
+   * @param callback
+   */
+  public init(callback: BridgeCallback) : void{
+    callback.success("")
+  }
+
+  /**
+   * 开启振动
+   * @param callback 振动触发结果
+   */
+  public vibrator(callback: BridgeCallback){
+    vibrator.startVibration({type: 'time', duration: 100}, {usage: 'touch'}, (error: BusinessError) =>{
+      if (error) {
+        console.error(`Failed to start vibration. Code: ${error.code}, message: ${error.message}`);
+        callback.error(error.code, error.message);
+      } else {
+        callback.success("");
+      }
+    })
+  }
+
+  /**
+   * 请求国家信息
+   * @param callback
+   */
+  public getCountryInfo(callback: BridgeCallback){
+    try {
+      geoLocationManager.getCurrentLocation({
+        priority: geoLocationManager.LocationRequestPriority.FIRST_FIX,
+        scenario: geoLocationManager.LocationRequestScenario.UNSET
+      }).then(res =>{
+        geoLocationManager.getAddressesFromLocation({
+          latitude: res.latitude,
+          longitude: res.longitude,
+          maxItems: 1
+        }).then(res =>{
+          let geo = res[0];
+          let countryInfo = new CountryInfo();
+          countryInfo.city = geo.locality;
+          countryInfo.region = geo.placeName;
+          countryInfo.country = geo.countryCode;
+          countryInfo.loc = geo.locale;
+          countryInfo.postal = geo.postalCode;
+          callback.success(JSON.stringify(countryInfo));
+        }).catch((error:number) =>{
+          console.error('promise, getAddressesFromLocation: error=' + JSON.stringify(error));
+          callback.error(error, "");
+        })
+      }).catch((error:number) =>{
+        console.error('promise, getCurrentLocation: error=' + JSON.stringify(error));
+        callback.error(error, "");
+      })
+    } catch (err) {
+      let be = err as BusinessError;
+      console.error("errCode:" + be.code + ",errMessage:" + be.message);
+      callback.error(be.code, be.message);
+    }
+  }
+}
+
+class CountryInfo{
+  private _city? = "";
+
+  public set city(value) {
+    this._city = value;
+  }
+
+  public get city() {
+    return this._city;
+  }
+
+  private _region? = "";
+
+  public set region(value) {
+    this._region = value;
+  }
+
+  public get region() {
+    return this._region;
+  }
+
+  private _country? = "";
+
+  public set country(value) {
+    this._country = value;
+  }
+
+  public get country() {
+    return this._country;
+  }
+
+  private _loc? = "";
+
+  public set loc(value) {
+    this._loc = value;
+  }
+
+  public get loc() {
+    return this._loc;
+  }
+
+  private _postal? = "";
+
+  public set postal(value) {
+    this._postal = value;
+  }
+
+  public get postal() {
+    return this._postal;
+  }
+
+}
+
+export class BridgeCallback{
+  private _success?:Function;
+  private _cancel?:Function;
+  private _error?:Function;
+
+  public setSuccessFunc(success:Function){
+    this._success = success;
+  }
+
+  public setCancelFunc(cancel:Function){
+    this._cancel = cancel;
+  }
+
+  public setErrorFunc(error:Function){
+    this._error = error;
+  }
+
+  public success(message:string){
+    if (this._success) {
+      Log.d(kTag, "callback func [success] by message: [%s]", message);
+      this._success(message)
+    } else {
+      Log.e(kTag, "callback func [success] is null");
+    }
+  }
+
+  public cancel(){
+    if (this._cancel) {
+      Log.d(kTag, "callback func [success]");
+      this._cancel()
+    } else {
+      Log.e(kTag, "callback func [cancel] is null");
+    }
+  }
+
+  public error(code:number, message:string){
+    if (this._error) {
+      Log.d(kTag, "callback func [success] by code: [%n], message: [%s]", code, message);
+      this._error(code, message)
+    } else {
+      Log.e(kTag, "callback func [error] is null");
+    }
+  }
+}
