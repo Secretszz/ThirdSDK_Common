@@ -13,9 +13,15 @@ typedef void(* U3DBridgeCallback_Cancel)();
 typedef void(* U3DBridgeCallback_Error)(int, const char *);
 
 @interface CommonApi : NSObject
+@property (nonatomic, assign) U3DBridgeCallback_Success onSuccess;
+@property (nonatomic, assign) U3DBridgeCallback_Cancel onCancel;
+@property (nonatomic, assign) U3DBridgeCallback_Error onError;
 +(NSString *)objectToJson:(id)obj;
 +(id)jsonToObject:(NSString *)json;
 +(NSDictionary*)jsonToNSDictionary:(NSString *)json;
 +(id)perseJsonObjectWitchDictionary:(NSDictionary*)dic clz:(Class)clz;
 +(id)perseJsonToObject:(Class)clz jsonStr:(NSString*)jsonString;
++(bool)init;
++(bool)vibrator:(int)effectType;
++(NSString *)getCountryInfo;
 @end
