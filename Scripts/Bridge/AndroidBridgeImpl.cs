@@ -77,6 +77,23 @@ namespace Bridge.Common
 					throw new ArgumentOutOfRangeException(nameof(effectType), effectType, null);
 			}
 		}
+	
+		/// <summary>
+		/// 一键拉起加QQ群
+		/// </summary>
+		/// <param name="qqGroupValue">加群参数</param>
+		/// <param name="listener">加群回调</param>
+		void IBridge.JoinQQGroup(string qqGroupValue, IBridgeListener listener)
+		{
+			if (api.Call<bool>("joinQQGroup", currentActivity, qqGroupValue))
+			{
+				listener?.OnSuccess("");
+			}
+			else
+			{
+				listener?.OnError(-1, "打开QQ失败，请检查设备内是否安装了QQ");
+			}
+		}
 	}
 }
 #endif

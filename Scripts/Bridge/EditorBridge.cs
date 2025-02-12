@@ -55,5 +55,15 @@ namespace Bridge.Common
 					readme = "https://ipinfo.io/missingauth"
 			}));
 		}
+	
+		/// <summary>
+		/// 一键拉起加QQ群
+		/// </summary>
+		/// <param name="qqGroupValue">加群参数</param>
+		/// <param name="listener">加群回调</param>
+		void IBridge.JoinQQGroup(string qqGroupValue, IBridgeListener listener)
+		{
+			listener?.OnSuccess("");
+		}
 	}
 }

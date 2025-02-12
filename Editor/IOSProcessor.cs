@@ -11,6 +11,7 @@
 #if UNITY_IOS
 namespace Bridge.Common
 {
+	using System.IO;
 	using UnityEditor;
 	using UnityEditor.Callbacks;
 	using UnityEditor.iOS.Xcode;
@@ -26,6 +27,13 @@ namespace Bridge.Common
 			if (target == BuildTarget.iOS)
 			{
 				ThirdSDKSettings instance = ThirdSDKSettings.Instance;
+				var plistPath = Path.Combine(pathToBuildProject, "Info.plist");
+				var plist = new PlistDocument();
+				plist.ReadFromFile(plistPath);
+				var rootDic = plist.root;
+				rootDic.AddApplicationQueriesSchemes(new[] { "mqqapi" });
+				plist.WriteToFile(plistPath);
+
 				var projPath = pathToBuildProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
 				var proj = new PBXProject();
 				proj.ReadFromFile(projPath);
