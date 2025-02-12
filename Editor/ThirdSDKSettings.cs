@@ -66,6 +66,8 @@ namespace Bridge.Common
 
 		public string FbDisplayName;
 
+		public string QQAppId;
+
 		public string UniversalLink => $"https://{UniversalLinkDomain}/{UniversalLinkPath}/";
 
 		private void Save()
@@ -184,7 +186,7 @@ namespace Bridge.Common
 							EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
 							break;
 						case PackageType.QQ:
-							EditorGUILayout.LabelField("future", GUILayout.ExpandWidth(false));
+							Instance.QQAppId = EditorGUILayout.DelayedTextField("App Id: ", Instance.QQAppId, GUILayout.Width(inputWidth), GUILayout.ExpandWidth(false));
 							break;
 						default:
 							throw new ArgumentOutOfRangeException(nameof(packageType), packageType, null);

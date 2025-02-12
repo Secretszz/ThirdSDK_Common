@@ -1,0 +1,8 @@
+<dependencies>
+  <androidPackages>
+    <androidPackage spec="com.squareup.okhttp3:okhttp:4.2.0">
+    </androidPackage>
+    <androidPackage spec="com.google.code.gson:gson:2.8.9">
+    </androidPackage>
+  </androidPackages>
+</dependencies>

@@ -37,6 +37,9 @@ namespace Bridge.Common
         public const string XHS_DEPENDENCIES = "##XHS_DEPENDENCIES##";
         public const string WX_DEPENDENCIES = "##WX_DEPENDENCIES##";
         public const string ALI_DEPENDENCIES = "##ALI_DEPENDENCIES##";
+        public const string ACTION_VIEW = "android.intent.action.VIEW";
+        public const string DEFAULT_CATEGORY = "android.intent.category.DEFAULT";
+        public const string BROWSABLE_CATEGORY = "android.intent.category.BROWSABLE";
 
         public static Dictionary<string, string> ReplaceBuildDefinedCache = new Dictionary<string, string>()
         {
@@ -48,6 +51,7 @@ namespace Bridge.Common
 
         public static List<XElement> QueriesElements = new List<XElement>();
         public static List<XElement> ApplicationElements = new List<XElement>();
+        public static List<XElement> StringsElements = new List<XElement>();
 
         [PostProcessBuild(10100)]
         public static void OnPostprocessBuild(BuildTarget target, string projectPath)
@@ -61,6 +65,7 @@ namespace Bridge.Common
             File.WriteAllText(filePath, code.ToString());
 
             RefreshLaunchManifest(projectPath);
+            SetStringsConfig(projectPath);
         }
         
         private static void RefreshLaunchManifest(string projectPath)
@@ -112,6 +117,32 @@ namespace Bridge.Common
             }
 
             elemManifest.Save(manifestPath);
+        }
+
+        private static void SetStringsConfig(string projectPath)
+        {
+            string stringsPath = Path.Combine(projectPath, STRINGS_XML_PATH);
+            if (!File.Exists(stringsPath))
+            {
+                Directory.CreateDirectory(stringsPath.Replace("/strings.xml", ""));
+                File.WriteAllText(stringsPath, @"<?xml version=""1.0"" encoding=""utf-8""?>
+<resources>
+</resources>");
+            }
+            XDocument strings = XDocument.Load(stringsPath);
+            XElement resources = strings.Element("resources");
+            if (resources == null)
+            {
+                resources = new XElement("resources");
+                strings.Add(resources);
+            }
+
+            for (int i = 0; i < StringsElements.Count; i++)
+            {
+                resources.Add(StringsElements[i]);
+            }
+
+            resources.Save(stringsPath);
         }
         
         private static void LogBuildFailed()
