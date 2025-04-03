@@ -102,9 +102,9 @@
 
 +(bool)vibrator:(int)effectType {
     UIImpactFeedbackGenerator* generator;
-    if (effectType == VibratorEffectTypeLow) {
+    if (effectType == 0) {
         generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleLight];
-    } else if (effectType == VibratorEffectTypeHigh){
+    } else if (effectType == 1){
         generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleHeavy];
     } else {
         generator = [[UIImpactFeedbackGenerator alloc]initWithStyle:UIImpactFeedbackStyleMedium];
@@ -132,24 +132,24 @@
 
 #pragma mark extern function
 
-extern "C" void c_platform_tools_init(U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
-    if ([MobilePlatformTools init]){
+extern "C" void c_common_init(U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
+    if ([CommonApi init]){
         onSuccess("");
     } else {
         onError(-1, "");
     }
 }
 
-extern "C" void c_platform_tools_vibrator(int effectType, U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
-    if ([MobilePlatformTools vibrator:effectType]){
+extern "C" void c_vibrator(int effectType, U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError){
+    if ([CommonApi vibrator:effectType]){
         onSuccess("");
     } else {
         onError(-1, "");
     }
 }
 
-extern "C" void c_platform_tools_getCountryInfo(U3DBridgeCallback_Success onSuccess){
-    NSString* resp = [MobilePlatformTools getCountryInfo];
+extern "C" void c_getCountryInfo(U3DBridgeCallback_Success onSuccess){
+    NSString* resp = [CommonApi getCountryInfo];
     onSuccess([resp UTF8String]);
 }
 

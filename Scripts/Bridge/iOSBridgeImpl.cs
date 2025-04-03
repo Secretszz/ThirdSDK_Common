@@ -26,7 +26,7 @@ namespace Bridge.Common
 		void IBridge.Init(IBridgeListener listener)
 		{
 			Callback._listener = listener;
-			c_platform_tools_init(Callback.OnSuccess, Callback.OnError);
+			c_common_init(Callback.OnSuccess, Callback.OnError);
 		}
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Bridge.Common
 		void IBridge.Vibrator(VibratorEffectType effectType, IBridgeListener listener)
 		{
 			Callback._listener = listener;
-			c_platform_tools_vibrator((int)effectType, Callback.OnSuccess, Callback.OnError);
+			c_vibrator((int)effectType, Callback.OnSuccess, Callback.OnError);
 		}
 
 		/// <summary>
@@ -47,7 +47,7 @@ namespace Bridge.Common
 		void IBridge.GetCountryInfo(IBridgeListener listener)
 		{
 			Callback._listener = listener;
-			c_platform_tools_getCountryInfo(Callback.OnSuccess);
+			c_getCountryInfo(Callback.OnSuccess);
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace Bridge.Common
 		private static extern bool c_join_qq_group(string groupUin, string key);
 
 		[DllImport("__Internal")]
-		private static extern void c_platform_tools_init(U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError);
+		private static extern void c_common_init(U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError);
 
 		/// <summary>
 		/// 振动
@@ -81,14 +81,14 @@ namespace Bridge.Common
 		/// <param name="onSuccess">调用回调</param>
 		/// <param name="onError">调用回调</param>
 		[DllImport("__Internal")]
-		private static extern void c_platform_tools_vibrator(int effectType, U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError);
+		private static extern void c_vibrator(int effectType, U3DBridgeCallback_Success onSuccess, U3DBridgeCallback_Error onError);
 
 		/// <summary>
 		/// 获取国家信息
 		/// </summary>
 		/// <param name="onSuccess">调用回调</param>
 		[DllImport("__Internal")]
-		private static extern void c_platform_tools_getCountryInfo(U3DBridgeCallback_Success onSuccess);
+		private static extern void c_getCountryInfo(U3DBridgeCallback_Success onSuccess);
 
 		private static class Callback
 		{
