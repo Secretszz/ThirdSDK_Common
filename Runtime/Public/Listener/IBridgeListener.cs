@@ -9,7 +9,7 @@
 // Create Time:		2024/09/11 10:35:39
 // *******************************************
 
-namespace Bridge.Common
+namespace SDSGDK.Common
 {
 	/// <summary>
 	/// 通信回调

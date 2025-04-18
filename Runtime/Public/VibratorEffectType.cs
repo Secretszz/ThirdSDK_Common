@@ -8,7 +8,7 @@
 // Create Time:		2024/10/14 17:08:09
 // *******************************************
 
-namespace Bridge.Common
+namespace SDSGDK.Common
 {
 	/// <summary>
 	/// 
