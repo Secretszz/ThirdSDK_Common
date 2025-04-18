@@ -17,7 +17,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	public class AndroidBridgeImpl : IBridge
+	internal class AndroidBridgeImpl : IBridge
 	{
 		private const string UnityPlayerClassName = "com.unity3d.player.UnityPlayer";
 		private const string ManagerClassName = "com.platform.tools.MobilePlatformTools";

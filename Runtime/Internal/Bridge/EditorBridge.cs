@@ -15,7 +15,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	public class EditorBridge : IBridge
+	internal class EditorBridge : IBridge
 	{
 		/// <summary>
 		/// 初始化
