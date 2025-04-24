@@ -14,7 +14,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	internal interface IBridge
+	public interface IBridge
 	{
 		/// <summary>
 		/// 初始化

@@ -17,7 +17,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	internal class iOSBridgeImpl : IBridge
+	public class iOSBridgeImpl : IBridge
 	{
 		/// <summary>
 		/// 初始化

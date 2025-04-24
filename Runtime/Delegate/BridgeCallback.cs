@@ -17,17 +17,17 @@ namespace Bridge.Common
 	/// <summary>
 	/// 成功回调
 	/// </summary>
-	internal delegate void U3DBridgeCallback_Success(string result);
+	public delegate void U3DBridgeCallback_Success(string result);
 
 	/// <summary>
 	/// 取消回调
 	/// </summary>
-	internal delegate void U3DBridgeCallback_Cancel();
+	public delegate void U3DBridgeCallback_Cancel();
 
 	/// <summary>
 	/// 错误回调
 	/// </summary>
-	internal delegate void U3DBridgeCallback_Error(int errCode, string errMsg);
+	public delegate void U3DBridgeCallback_Error(int errCode, string errMsg);
 	
 #endif
 
@@ -36,7 +36,7 @@ namespace Bridge.Common
 	/// <summary>
 	/// 
 	/// </summary>
-	internal class BridgeCallback : AndroidJavaProxy
+	public class BridgeCallback : AndroidJavaProxy
 	{
 		public BridgeCallback(IBridgeListener listener) : base("com.bridge.common.listener.IBridgeListener")
 		{
@@ -73,5 +73,36 @@ namespace Bridge.Common
 		}
 	}
 
+#endif
+
+#if UNITY_OPENHARMONY
+	public class BridgeCallback
+	{
+		public BridgeCallback(IBridgeListener listener)
+		{
+			this.listener = listener;
+		}
+
+		private IBridgeListener listener;
+
+		public void Callback(params OpenHarmonyJSObject[] args)
+		{
+			var callbackResponse = args[0];
+			int code = callbackResponse.Call<int>("getCode");
+			string message = callbackResponse.Call<string>("getMessage");
+			if (code == 0)
+			{
+				listener?.OnSuccess(message);
+			}
+			else if (code == -1)
+			{
+				listener?.OnCancel();
+			}
+			else
+			{
+				listener.OnError(code, message);
+			}
+		}
+	}
 #endif
 }
