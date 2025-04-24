@@ -9,7 +9,7 @@
 // *******************************************
 
 #if UNITY_ANDROID
-namespace SDSGDK.Common
+namespace Bridge.Common
 {
 	using System;
 	using UnityEngine;

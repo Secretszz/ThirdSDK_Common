@@ -9,7 +9,7 @@
 // *******************************************
 
 #if UNITY_IOS
-namespace SDSGDK.Common
+namespace Bridge.Common
 {
 	using AOT;
 	using System.Runtime.InteropServices;

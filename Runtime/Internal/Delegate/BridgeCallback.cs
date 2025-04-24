@@ -8,7 +8,7 @@
 // Create Time:		2024/09/11 10:37:31
 // *******************************************
 
-namespace SDSGDK.Common
+namespace Bridge.Common
 {
 	using UnityEngine;
 

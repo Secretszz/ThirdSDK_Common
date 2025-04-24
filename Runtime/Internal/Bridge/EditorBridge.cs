@@ -8,7 +8,7 @@
 // Create Time:		2024/09/20 20:54:37
 // *******************************************
 
-namespace SDSGDK.Common
+namespace Bridge.Common
 {
 	using Newtonsoft.Json;
 
